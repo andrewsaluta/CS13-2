@@ -12,3 +12,5 @@ APPLICATION LAYER
 ----> Server connection service
 BUSINESS LAYER
 ----> Ticket purchasing Service
+----> Location & Movie Lookup Service
+----> Payment Processor (Online/In Person)
