@@ -25,3 +25,7 @@ EXTERNAL SERVICES LAYER
 ----> Analytics Tracker/Storage
 ----> Login Gateway
 ----> Movie statustuc monitoring service
+
+-- DESCRIPTION -- 
+OVERALL SUMMARY
+This system supports movie ticket browsing and purchases through multiple different interfaces (mobile app, website, and in-person kiosk). It uses a layered architecture for the diagram including a presentation layer, Application layer, Business layer, and Data Storage layer. It also includes an external service layer for third party functions like payments, notifications, analytics, and authentification. Requests for purchases start from the user interface in presentation layer into application layer, which gets logged into the Business layer for finalizing the purchase, and finally into the Data Storage layer to keep track of the movie purchased, seat selection, and business logistics.
