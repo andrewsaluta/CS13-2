@@ -1,0 +1,48 @@
+5. Test Plan
+5.1 Purpose
+The purpose of this test plan is to verify and validate that the Ticket Processing Machine (TPM) movie theater system meets its functional and non-functional requirements. Testing will confirm that users can browse movies and showtimes, select and lock seats, complete payment, receive valid tickets, and that anti-bot and anti-resell protections work correctly. The plan also verifies performance, availability, security, portability, and system reliability across supported interfaces.
+5.2 Scope
+This test plan covers the core TPM features described in the SRS: browse and listing, seat selection and locking, checkout and payment, ticket issuing and uniqueness, and anti-bot and anti-resell measures. It also covers the system’s main interfaces, including the web storefront, kiosk flow, payment integration, and admin dashboard, along with the required communication security and browser/device portability.
+5.3 Test Approach
+Testing will use three levels:
+Unit testing will verify individual classes, methods, and small logic units such as ticket generation, price calculation, seat-lock timing, and validation rules.
+Functional testing will verify user-facing features such as browsing movies, filtering showtimes, selecting seats, handling seat lock failures, processing payment, and responding to anti-bot challenges.
+System testing will verify the complete end-to-end experience across the full TPM workflow, including the web storefront, kiosk flow, payment gateway integration, QR ticket issuance, and admin access.
+The SRS specifically calls for end-to-end UI verification, concurrency testing, sandbox payment testing, contract testing for theater schedule data, certificate validation for TLS, and hardware-in-the-loop checks for kiosk devices.
+5.4 Test Items
+The main test items are:
+Browse and listing functions
+Seat selection and locking functions
+Checkout and payment functions
+Ticket issuing and uniqueness functions
+Anti-bot and anti-resell functions
+Web storefront interface
+Kiosk interface
+Admin dashboard interface
+Secure communications using TLS 1.2 or higher
+Performance and availability requirements
+5.5 Test Environment
+Testing will be performed using:
+a desktop browser
+a mobile browser
+a kiosk-style interface or simulator
+a payment processing sandbox 
+test theater schedule data
+ automated UI and API testing tools
+concurrency testing tools
+a secure test environment that supports TLS validation
+This matches the SRS requirement that the storefront works across major browsers and mobile devices, that communications use TLS 1.2 or higher, and that integrations with external services be verified by contract, sandbox, and acceptance testing.
+5.6 Pass / Fail Criteria
+A test passes when the system produces the expected result without data loss, incorrect ticketing, double-booking, payment failure handling errors, or security violations. A test fails when the system allows invalid seat duplication, incorrect pricing, incorrect ticket issuance, unauthorized access, broken display of showtimes, or failure to recover from a declined payment or expired seat lock. These criteria follow the SRS rules for atomic seat reservation, payment handling, ticket uniqueness, and security controls.
+5.7 Test Set Organization
+5.7. 1 Unit Test Sets
+UT-1: Ticket data and price logic: Covers the Ticket class, unique ticket ID creation, seat number assignment, and price fields.
+UT-2: Seat locking and validation logic: Covers lock timing, seat availability checks, checkout-window expiration, and the 20-ticket transaction limit.
+5.7. 2 Functional Test Sets
+FT-1: Browse and showtime listing: Covers movie browsing, filtering, sorting, and correct showtime display.
+FT-2: Seat selection, payment, and anti-bot behavior: Covers seat selection, lock confirmation, payment success/failure, CAPTCHA or challenge flow, and rollback when needed.
+5.7.3 System Test Sets
+ST-1: End-to-end web purchase flow: Covers browsing, seat selection, payment, and QR ticket generation in one full web transaction.
+ST-2: Kiosk and admin workflow: Covers kiosk purchase behavior, receipt/ticket output, QR scanning support, and admin login/report viewing.
+5.8 Traceability Summary
+The test cases above follow the SRS requirements. Browse and listing are covered by the movie/showtime display tests. Seat selection and locking are covered by the concurrency and timeout tests. Checkout and payment are covered by the pricing, ticket limit, and payment decline tests. Ticket issuing and uniqueness are covered by the ticket generation test. Anti-bot and anti-resell behavior is covered through the protected checkout and challenge flow. System tests cover the complete web and kiosk experience as well as admin access.
