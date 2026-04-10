@@ -42,3 +42,5 @@ SelectionSearch_1	Selection_Search_Module	P0	User gets prompted to select seats 
 3. Enter correct CAPTCHA.
 3. Make sure payment window activates."	Payment is processed and Seats should be blocked out for future customers	Payment is processed and seats are blocked out for future customers	Pass	TesterA
 WebPurchase_1	Web_Purchase_Module	P0	End-to-end web purchase flow Covers browsing, seat selection, payment, and QR ticket generation in one full web transaction.	app is functional	1. Launch application in phone. - 2. Search for a movie , i.e ('Dune') 3- Select seats for a showtime for dune 4-purhcase seats 5-view qr code ticket	Search results display dune and showtimes/locations, seats are able to be selected, purchasing works correctly, qr code succesfully displays	Dune and showtimes/locations appear, seat is able to be selected and purchased, qr code is seen	Pass	TesterJ
+
+added one sql and seat lock cache
