@@ -1,0 +1,52 @@
+Data Management Strategy
+Our Movie Ticketing System, which we call Ticket Processing Machine (TPM), will use one primary SQL database as the central data store for the entire application. This choice fits because the TPM must manage tightly connected data such as users, theaters, movies, showtimes, seats, orders, payments, and tickets. The current design already emphasizes a layered architecture with data storage for user, theater, and ticket/order information, which is consistent with a unified SQL approach that keeps these related records structured and linked through foreign keys.
+6.2.1 Database Design Choice
+The system will use a single SQL database instead of multiple separate databases. Within that database, the data will be organized into related tables such as:
+Users: customer, staff, and administrator accounts
+Theaters / Locations: theater name, address, coordinates, and other location data
+Movies: movie metadata such as title, rating, runtime, and genre
+Showtimes: screening times, format type, theater reference, and seat capacity
+Seats: physical seat definitions for each theater
+Showtime_Seats: seat status for a specific showtime, including available, locked, or sold
+Orders: transaction header for one purchase
+Payments: payment method, payment status, and transaction reference
+Tickets: issued ticket records, QR data, and optional blockchain token reference
+Audit_Logs: administrative actions, seat-lock events, payment failures, and security events
+This structure supports the system’s main functions: browsing movies, locking seats, processing payments, issuing tickets, and preventing duplicate seat sales. The use of foreign keys alows to connect showtimes to theaters, seats to showtimes, and tickets to orders in a clean and controlled way.
+6.2.2 Why One SQL Database Is the Best Fit
+A single SQL database is the best choice for this system for four main reasons.
+The ticketing workflow depends on strong consistency. When a customer selects seats, the system must lock them immediately and prevent any other customer from buying the same seats. SQL databases are designed for ACID transactions, which makes atomic seat locking and payment finalization more reliable.
+The system contains many related components that frequently need to be queried together. Such as, the system may need to retrieve a movie, its showtimes, the theater location, seat availability, and order details in one request. SQL works well for these join-heavy operations.
+The system must keep financial and transaction records accurate. Orders, payments, and ticket issued should never be partially saved. A relational database reduces the risk of inconsistent records.
+A single SQL database is easier to maintain for a group project. It reduces deployment complexity, simplifies testing, and makes it easier to enforce consistent data rules across the application.
+6.2.3 Logical Organization of the Data
+Although the system uses one physical database, the data will still be divided logically into sections.
+Operational data: movies, theaters, showtimes, seats, and availability. This data changes frequently, and supports live browsing and booking.
+Transactional data: orders, payments, tickets, and seat locks. This data must be written carefully and protected from duplication or rollback errors.
+Security and audit data: login history, administrative actions, CAPTCHA challenges, suspicious activity flags, and system logs. This data helps support anti-bot and anti-resell measures.
+This logical separation can be implemented through table groupings or database schemas, while still keeping everything inside the same primary SQL system.
+6.2.4 Data Flow and Lifecycle
+The data lifecycle in the TPM works as follows:
+Theater schedule data is retrieved from the theater API and stored or refreshed in the database.
+A user browses movies and showtimes, which are read from the database.
+When a seat is selected, the system creates a temporary seat lock record with an expiration time.
+After successful payment, the lock is converted into a sold seat state.
+The system generates the ticket record and stores the QR code data.
+Transaction details are retained for reporting, refunds, dispute handling, and administrative review.
+Old temporary lock records and expired challenge records can be cleaned up by scheduled maintenance.
+This approach supports the requirement that seat selection must be efficient and that failed payments should release seats automatically.
+6.2.5 Security and Protection of Sensitive Data
+Since the system stores sensitive data, the database must enforce strong protections. Payment data should not be stored in raw form if it can be avoided; instead, the system should store only necessary transaction references from the payment processor. User authentication data should be hashed and salted. Administrative access should be restricted through role-based permissions.
+The database should also use:
+encryption at rest
+encrypt connections between the application and database
+strict user roles and permissions
+audit logging for sensitive actions
+automatic backups and restore testing
+This supports the system’s security requirements and helps protect customer and transaction records.
+6.2.5 Why Not Multiple Databases
+A multi-database approach was considered, such as one database for users, one for theaters, and one for ticket sales. However this would increase system errors by separating databases for users, theaters, and sales. Coordinating payments across these sources risks inconsistent data records. The use of a single database is better since it prevents double bookings and maintains data accuracy.
+6.2.6 Why Not SQL + Secondary Store
+Another alternative would be a hybrid  design combining SQL and NoSQL or a cache database. These systems are useful for high volume analytics or session caching. Our TPM core requirements do not require a second persistent database. One SQL database serves transactional and relational data as a primary design. A cache may be added for performance later but doesn't  replace the main database.
+6.2.7 Tradeoffs
+The main advantage of a single SQL database is that it provides simple structures and dependable results. It is perfect for seat reservations, payment records, and ticket issuance. SQL also  maintains data consistency across your system. The main trade offs are that unstructured data creates problems for one SQL engine. Large scale analytics require NoSQL solutions and high read traffic slows performance for a single SQL. Our TPM favors balance over scale.
